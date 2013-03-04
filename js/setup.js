@@ -1,6 +1,6 @@
-if(!/(&|\?)name=/.test(window.location.search)){
+if(!/(&|\?)username=/.test(window.location.search)){
   var newSearch = window.location.search === '' || window.location.search === '?' ? '' : '&';
-  newSearch += 'name=' + (prompt('What is your name?') || 'anonymous');
+  newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
   window.location.search = newSearch;
 }
 

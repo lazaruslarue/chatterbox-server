@@ -38,3 +38,7 @@ node_modules
 
 ### PhPStorm ###
 .idea/
+
+### temp ###
+.tmp
+.temp

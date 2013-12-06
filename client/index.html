@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chatterbox</title>
+    <link rel="stylesheet" href="styles/styles.css">
+
+    <!-- external javascript -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <!-- internal javascript -->
+    <script src="scripts/config.js"></script>
+    <!-- <script src="scripts/app.js"></script> -->
+    <script src="scripts/app2.js"></script>
+    <title>Chat-Client</title>
+  </head>
+  <body>
+    <div id="main">
+      <h1>Chat-Client</h1>
+      <div class="container">
+        <div class="nav">
+          <form><input type="paragraph" name="userText" value=""/>
+          <button class="submit" type="button">Submit</button>
+          <button class="reset" type="button">Reset View</button> 
+          </form>
+        </div>
+        <div class="clear"></div>
+        <div id="left">
+          <div class="columnHeader">
+            <span class="columnTitle">Current Room:</span>
+            <span class="columnSubtitle currentRoom"></span>
+          </div>
+        </div>
+        <div id="right">
+          <div class="columnHeader">
+            <span class="columnTitle">User View:</span>
+            <span class="columnSubtitle userFocus"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </body>
+</html>

@@ -21,29 +21,49 @@ var handleRequest = function(request, response) {
   console.log("Serving request type " + request.method + " for url " + request.url);
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
-  switch(request.method) {
-    case "GET":
-      var locationArray = request.url.split('/');
-      locationArray = locationArray.slice(3);  // this gives [ 'classes', 'messages' ]
-      if (locationArray[0] !== "classes" && locationArray[1] !== "room1") {
-        response.writeHead(404, headers); //ERROR NOT FOUND
-        response.end();
-      } else {
-        response.writeHead(200, headers); //okay
-        var responseMessage = JSON.stringify(messageLog);
-        response.end(responseMessage);
-      }
-      break;
-    case "POST":
-      var body = '';
-      response.writeHead(201, headers); //created
-      request.on('data', function( data) {
-        body += data;
-        messageLog.push(JSON.parse(body));
-      });
-      response.end();
-      break;
+  var locationArray = request.url.split('/');
+  locationArray = locationArray.slice(-2); // this gives [ 'classes', 'messages' ]
+  if (locationArray[0] !== "classes" && locationArray[1] !== "room1") {
+     requestMethods['ERROR'](response, response, headers);
+  } else {
+     requestMethods[request.method](request, response, headers);
+  }
+};
+
+
+var requestMethods = {
+  GET: function(request, response, headers) {
+    response.writeHead(200, headers); //okay
+    var responseMessage = JSON.stringify(messageLog);
+    response.end(responseMessage);
+  },
+  POST:  function(request, response, headers) {
+    var body = '';
+    response.writeHead(201, headers); //created
+    request.on('data', function( data) {
+      body += data;
+      messageLog.push(JSON.parse(body));
+    });
+    response.end();
+  },
+  ERROR: function(request, response, headers) {
+    response.writeHead(404, headers); //ERROR NOT FOUND
+    response.end();
   }
 };
 
 exports.handleRequest = handleRequest;
+
+// var error = false
+// try {
+
+//   var parsed = json.parse(stuff)
+// } catch(e) {
+//   error = true
+//   //
+// }
+// if (error) {
+
+
+// } 
+

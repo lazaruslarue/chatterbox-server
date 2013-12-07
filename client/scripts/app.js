@@ -75,7 +75,7 @@ var getMessages = function(){
   console.log('getting messages');
   $.ajax({
     // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: 'http://127.0.0.1:8080/classes/messages',
     type: 'GET',
     contentType: 'application/json',
     data: {"order" :"-createdAt"},
@@ -143,7 +143,7 @@ var composeMessage = function(userText) {
 var sendMessage = function(input) {
   var toSend = composeMessage(input);
   $.ajax({
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: 'http://127.0.0.1:8080/classes/messages',
     type: 'POST',
     data: JSON.stringify(toSend),
     contentType: 'application/json',
@@ -198,7 +198,7 @@ var evilMessage = function(userText) {
 var evilSend = function(input) {
   var toSend = evilMessage(input);
   $.ajax({
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: 'http://127.0.0.1:8080/classes/messages',
     type: 'POST',
     data: JSON.stringify(toSend),
     contentType: 'application/json',

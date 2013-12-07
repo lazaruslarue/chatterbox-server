@@ -23,7 +23,9 @@ var handleRequest = function(request, response) {
   headers['Content-Type'] = "text/plain";
   switch(request.method) {
     case "GET":
-      if (request.url !== "/classes/messages" && (request.url !== "/classes/room1")) {
+      var locationArray = request.url.split('/');
+      locationArray = locationArray.slice(3);  // this gives [ 'classes', 'messages' ]
+      if (locationArray[0] !== "classes" && locationArray[1] !== "room1") {
         response.writeHead(404, headers); //ERROR NOT FOUND
         response.end();
       } else {

@@ -41,7 +41,6 @@ $(document).ready(function(){
 });
 
 
-
 //GLOBALS
 
 var userName=''; // grab this from the prompt
@@ -66,8 +65,19 @@ var messageFields = [
   'objectId'
 ];
 
-// HELPER FUNCTIONS
 
+// HELPER FUNCTIONS
+// var defaultCorsHeaders = {
+//    These headers will allow Cross-Origin Resource Sharing (CORS).
+//  * This CRUCIAL code allows this server to talk to websites that
+//  * are on different domains. (Your chat client is running from a url
+//  * like file://your/chat/client/index.html, which is considered a
+//  * different domain.) 
+//   "access-control-allow-origin": "*",
+//   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+//   "access-control-allow-headers": "content-type, accept",
+//   "access-control-max-age": 10 // Seconds.
+// };
 
 //RETRIEVING MESSAGES
 
@@ -77,8 +87,9 @@ var getMessages = function(){
     // always use this url
     url: 'http://127.0.0.1:8080/classes/messages',
     type: 'GET',
+
     contentType: 'application/json',
-    data: {"order" :"-createdAt"},
+    // data: {"order" :"-createdAt"},
     // {"where": {
     //       "objectId":"teDOY3Rnpe"
     //       // "order":"-createdAt"
@@ -86,7 +97,9 @@ var getMessages = function(){
     //   },
     success: function (data) {
       listOfMessages = [];
-      _.each(data.results, function(messageJSON){
+      var objectifiedData = JSON.parse(data);
+      _.each(objectifiedData, function(messageJSON){
+        console.log(messageJSON);
         renderMessage(messageJSON);
       });
       printMessages(listOfMessages);
@@ -102,7 +115,9 @@ var getMessages = function(){
 var renderMessage = function(messageJSON){
   var $messageNode = $('<div></div>');
   $messageNode.addClass('message');
+  // debugger;
   _.each(messageFields, function(val, i) {
+    // debugger;
     var content = messageJSON[messageFields[i]];
     if(content){
       content = content.slice(0,characterLimits[messageFields[i]]);
@@ -141,11 +156,11 @@ var composeMessage = function(userText) {
 
 
 var sendMessage = function(input) {
-  var toSend = composeMessage(input);
+  var msgToSend = composeMessage(input);
   $.ajax({
     url: 'http://127.0.0.1:8080/classes/messages',
     type: 'POST',
-    data: JSON.stringify(toSend),
+    data: JSON.stringify(msgToSend),
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
@@ -158,60 +173,6 @@ var sendMessage = function(input) {
     }
   });
 };
-
-// var changeRoom = function() {
-//   grabUserInput();
-  
-//   updateRoomName();
-  
-//   getMessagesForRoom();
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/// XSS /// 
-
-var evilMessage = function(userText) {
-  var evilJSON = {};
-  userName = window.location.search;
-  userName = userName.split('=')[1];
-  evilJSON.userName = userName;
-  // evilJSON['\<script\>window.location.reload\<\/script\>'] = true;
-  evilJSON.script = "$('body').css('color','white')";
-  evilJSON.style = "font-size=600px;";
-  evilJSON.text = userText;
-  evilJSON.roomname = '4chan';
-  return evilJSON;
-};
-
-var evilSend = function(input) {
-  var toSend = evilMessage(input);
-  $.ajax({
-    url: 'http://127.0.0.1:8080/classes/messages',
-    type: 'POST',
-    data: JSON.stringify(toSend),
-    contentType: 'application/json',
-    success: function (data) {
-      console.log('chatterbox: Message sent');
-    },
-    error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message');
-    }
-  });
-};
-
 
 // Object {results: Array[100]}
 // results: Array[100]
@@ -222,50 +183,10 @@ var evilSend = function(input) {
 // text: "hello"
 // updatedAt: "2013-10-07T16:22:03.280Z"
 // username: "gary"
-// message: 
+// message: message
 
 // var message = {
 //   'username': 'shawndrost',
 //   'text': 'trololo',
 //   'roomname': '4chan'
-// };
-
-
-// get JSON
-
-// post to Parse
-
-// discect the Parse response
-
-// construct message DOMs from parts of ParseObj
-
-
-
-
-// eventually: 
-// autoupdate - get new messages on some set interval and ignore old messages
-
-// look @ user pages 
-//
-
-// ChatterBox.prototype.getMessages = function(){
-//   $.ajax({
-//     // always use this url
-//     url: 'https://api.parse.com/1/classes/chatterbox',
-//     type: 'GET',
-//     contentType: 'application/json',
-
-//     success: function (data) {
-//       this.renderMessage();
-//       _.each(data.results, function(messageJSON){
-//         renderMessage.call(that, messageJSON);
-//         console.log('got some messages, ', messageJSON); //debugging
-//       });
-//     },
-
-//     error: function (data) {
-//       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-//       console.error('chatterbox: Failed to get message');
-//     }
-//   });
 // };

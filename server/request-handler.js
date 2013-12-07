@@ -23,7 +23,8 @@ var handleRequest = function(request, response) {
   headers['Content-Type'] = "text/plain";
   var locationArray = request.url.split('/');
   locationArray = locationArray.slice(-2); // this gives [ 'classes', 'messages' ]
-  if (locationArray[0] !== "classes" && locationArray[1] !== "room1") {
+  console.log(request.url, ' <---requestURL splitURL--> ', locationArray);
+  if (locationArray[0] !== "classes" && (locationArray[1] !== "room1" || locationArray[1] !== "messages")) {
      requestMethods['ERROR'](response, response, headers);
   } else {
      requestMethods[request.method](request, response, headers);
@@ -35,6 +36,7 @@ var requestMethods = {
   GET: function(request, response, headers) {
     response.writeHead(200, headers); //okay
     var responseMessage = JSON.stringify(messageLog);
+    console.log("messageLog = ", messageLog, "after json = ", responseMessage);
     response.end(responseMessage);
   },
   POST:  function(request, response, headers) {
@@ -42,12 +44,17 @@ var requestMethods = {
     response.writeHead(201, headers); //created
     request.on('data', function( data) {
       body += data;
+      console.log(body);
       messageLog.push(JSON.parse(body));
     });
     response.end();
   },
   ERROR: function(request, response, headers) {
     response.writeHead(404, headers); //ERROR NOT FOUND
+    response.end();
+  },
+  OPTIONS: function (request, response, headers) {
+    response.writeHead(200, headers); //OPTIONS
     response.end();
   }
 };

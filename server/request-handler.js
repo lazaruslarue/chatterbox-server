@@ -5,7 +5,8 @@
  * this file and include it in basic-server.js so that it actually works.
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 var messageLog = [];
-var defaultCorsHeaders = {
+var url = require('url');
+var headers = {
   /* These headers will allow Cross-Origin Resource Sharing (CORS).
  * This CRUCIAL code allows this server to talk to websites that
  * are on different domains. (Your chat client is running from a url
@@ -14,16 +15,19 @@ var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
   "access-control-allow-headers": "content-type, accept",
-  "access-control-max-age": 10 // Seconds.
+  "access-control-max-age": 10, // Seconds.
+  'Content-Type': "text/plain"
+
 };
 
 var handleRequest = function(request, response) {
   console.log("Serving request type " + request.method + " for url " + request.url);
-  var headers = defaultCorsHeaders;
-  headers['Content-Type'] = "text/plain";
   var locationArray = request.url.split('/');
   locationArray = locationArray.slice(-2); // this gives [ 'classes', 'messages' ]
-  console.log(request.url, ' <---requestURL splitURL--> ', locationArray);
+
+  var pathname = url.parse(request.url).pathname;
+  console.log(pathname);
+
   if (locationArray[0] !== "classes" && (locationArray[1] !== "room1" || locationArray[1] !== "messages")) {
      requestMethods['ERROR'](response, response, headers);
   } else {
